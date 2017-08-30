@@ -12,7 +12,7 @@ public class ConnectServer implements Runnable, MultiplayerConstants {
     private static ConnectServer instance;
     public static volatile boolean connected = false;
 
-    public static ConnectServer instance() {
+    private static ConnectServer instance() {
         if (instance == null) {
             instance = new ConnectServer();
         }
@@ -26,36 +26,37 @@ public class ConnectServer implements Runnable, MultiplayerConstants {
 
     public static void connect() {
         if (connected) {
-            instance().listener.callback();
+            instance().listener.connectedCallback();
         } else {
             new Thread(instance()).start();
         }
     }
 
     public interface ConnectServerListener {
-        void callback();
+        void connectedCallback();
 
-        void loading(boolean b);
+        void setLoading(boolean b);
 
-        void message(String s);
+        void showMessage(String s);
     }
 
     private final static int SERVER_PORT = 7158;
     private static final String SERVER_IP_ADDRESS = "80.85.156.14";
 
-    public static InetAddress ipAddress;
+    private static InetAddress ipAddress;
 
     private ConnectServerListener listener;
 
     private ConnectServer() { }
 
-    public static ObjectOutputStream out;
-    public static ObjectInputStream in;
+    private static ObjectOutputStream out;
+    private static ObjectInputStream in;
 
-    private void sendCommand(Object data, int command) throws IOException {
+    public static void sendCommand(Object data, int command) throws IOException {
         out.writeObject(new ServerCommand(data, command));
         out.flush();
     }
+
 
     @Override
     public void run() {
@@ -82,27 +83,27 @@ public class ConnectServer implements Runnable, MultiplayerConstants {
                     switch (server_command.getCommand()) {
                         case GIVE_LOGIN_AND_PASS: {
                             connected = true;
-                            listener.callback();
+                            listener.connectedCallback();
                             break;
                         }
                         case ACCOUNT_ALREADY_EXISTS: {
-                            listener.loading(false);
-                            listener.message("Аккаунт уже существует! Попробуйте войти");
+                            listener.setLoading(false);
+                            listener.showMessage("Аккаунт уже существует! Попробуйте войти");
                             break;
                         }
                         case ACCOUNT_CREATED: {
                             sendCommand(LobbyModel.myProfile, UPDATE_PROFILE);
-                            listener.message("Поздравляем! Учетная запись создана");
+                            listener.showMessage("Поздравляем! Учетная запись создана");
                             break;
                         }
                         case UNCORRECTED_LOGIN_OR_PASSWORD: {
-                            listener.loading(false);
-                            listener.message("Неправильный логин или пароль!");
+                            listener.setLoading(false);
+                            listener.showMessage("Неправильный логин или пароль!");
                             break;
                         }
                         case SET_PROFILE: {
                             LobbyModel.myProfile = (Profile) data;
-                            listener.message("Вы вошли под ником " + LobbyModel.myProfile.nick);
+                            listener.showMessage("Вы вошли под ником " + LobbyModel.myProfile.nick);
                             break;
                         }
                     }

@@ -6,6 +6,7 @@ package MultiPlayer;
 
 public interface MultiplayerConstants {
 
+    int NOT_COMMAND = -1;
     int CHECK_CONNECTION = 0;
     int GIVE_LOGIN_AND_PASS = 1;
     int SET_PROFILE = 2;
