@@ -14,10 +14,10 @@ import java.io.IOException;
 
 import MultiPlayer.ConnectServer;
 import MultiPlayer.LobbyModel;
-import MultiPlayer.MultiplayerConstants;
+import MultiPlayer.MultiPlayerConstants;
 import MultiPlayer.Profile;
 
-public class LoginActivity extends AppCompatActivity implements ConnectServer.ConnectServerListener, MultiplayerConstants {
+public class LoginActivity extends AppCompatActivity implements ConnectServer.ConnectServerListener, MultiPlayerConstants {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -109,7 +109,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectServer.Co
     }
 
     @IdRes
-    final int[] enablindIds = {
+    final int[] enablingIds = {
             R.id.radio_enter, R.id.radio_new,
             R.id.log, R.id.passwd0, R.id.passwd1,
             R.id.label_passwd1
@@ -122,7 +122,7 @@ public class LoginActivity extends AppCompatActivity implements ConnectServer.Co
     @Override
     public void setLoading(boolean loading){
         runOnUiThread(() -> {
-            for (int enablingId : enablindIds) {
+            for (int enablingId : enablingIds) {
                 findViewById(enablingId).setEnabled(!loading);
             }
 
@@ -133,13 +133,17 @@ public class LoginActivity extends AppCompatActivity implements ConnectServer.Co
 
     @Override
     public void showMessage(String message){
-        runOnUiThread(() -> {
-            Toast.makeText(
-                    getApplicationContext(),
-                    message,
-                    Toast.LENGTH_SHORT)
-                .show();
-        });
+        runOnUiThread(() -> Toast.makeText(
+                getApplicationContext(),
+                message,
+                Toast.LENGTH_SHORT)
+            .show());
+    }
+
+    @Override
+    public void showLobby() {
+        Intent intObj = new Intent(this, LobbyActivity.class);
+        startActivity(intObj);
     }
 }
 

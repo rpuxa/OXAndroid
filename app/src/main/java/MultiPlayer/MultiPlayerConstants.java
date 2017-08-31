@@ -1,10 +1,6 @@
 package MultiPlayer;
 
-/**
- * Created by Григорий on 30.08.2017.
- */
-
-public interface MultiplayerConstants {
+public interface MultiPlayerConstants {
 
     int NOT_COMMAND = -1;
     int CHECK_CONNECTION = 0;
