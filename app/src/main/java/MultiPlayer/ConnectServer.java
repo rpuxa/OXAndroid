@@ -47,6 +47,8 @@ public class ConnectServer implements Runnable, MultiPlayerConstants {
 
     public interface ConnectServerListenerLobby {
         void updateList(ArrayList<Player> players);
+
+        void openProfile(Profile profile);
     }
 
     private final static int SERVER_PORT = 7158;
@@ -119,6 +121,9 @@ public class ConnectServer implements Runnable, MultiPlayerConstants {
                             break;
                         case SET_YOUR_ID:
                             myID = (long) data;
+                            break;
+                        case GET_PLAYER_PROFILE:
+                            lobbyListener.openProfile((Profile) data);
                             break;
                     }
                 } catch (IOException e) {
